@@ -59,62 +59,150 @@ void fillStudentRecord(StudentStruct *students, int *numOfStudent) {
 /* Return student ID */
 int findBestStudentInMidterm(StudentStruct* students, int numOfStudent) {
     /* TODO */
-    return 1001;
+    float maxScore = -1.0f;
+    int bestStudentId = -1;
+
+    for ( int i = 0; i < numOfStudent; i++ ) {
+        if ( (*(students + i)).record.midterm > maxScore ) {
+            maxScore = (*(students + i)).record.midterm;
+            bestStudentId = (*(students + i)).id;
+        }
+    }
+    return bestStudentId;
 }
 
 /* Return student ID */
 int findBestStudentInFinal(StudentStruct* students, int numOfStudent) {
     /* TODO */
-    return 1001;
+    float maxScore = -1.0f;
+    int bestStudentId = -1;
+
+    for ( int i = 0; i < numOfStudent; i++ ) {
+        if ( (*(students + i)).record.final > maxScore ) {
+            maxScore = (*(students + i)).record.final;
+            bestStudentId = (*(students + i)).id;
+        }
+    }
+    return bestStudentId;
 }
 
 /* Return student ID */
 int findBestStudent(StudentStruct* students, int numOfStudent) {
     /* TODO */
-    return 1001;
+    float meanMaxScore = -1.0f;
+    int bestStudentID = -1; 
+
+    for ( int i = 0; i < numOfStudent; i++ ) {
+
+        float meanScore =  ( (*(students + i)).record.midterm + (*(students + i)).record.final ) / 2.0f;
+
+        if ( meanScore > meanMaxScore ) {
+            meanMaxScore = meanScore;
+            bestStudentID = (*(students + i)).id;
+        }
+    }
+    return bestStudentID;
 }
 
 /* Return Index */
 int findStudentByStudentID(StudentStruct* students, int numOfStudent, int id) {
-    /* TODO */
+    for ( int i = 0; i < numOfStudent; i++ ) { // 끝까지 반복문을 돌렸을때
+        if ( (*(students + i)).id == id ) { // 원하는 id랑 일치하면
+            return i;   // index 반환
+        }
+    }
     return -1;
 }
 
 void modifyRecord(StudentStruct *students, int numOfStudent, const StudentStruct& student) {
     int idx = findStudentByStudentID(students, numOfStudent, student.id);
     if (idx >= 0) {
-        /* TODO */
+        students[idx].record.midterm = student.record.midterm;
+        students[idx].record.final = student.record.final;
     }
 }
 
 void addStudent(StudentStruct *students, int *numOfStudent, const char* name, int id, float midterm, float final) {
     int idx = findStudentByStudentID(students, *numOfStudent, id);
     if (idx < 0) {
+        students[*numOfStudent] = StudentStruct( name , id, midterm, final );
         ++(*numOfStudent);
-        /* TODO */
     }
 }
 
 void deleteStudent(StudentStruct* students, int *numOfStudent, int id) {
     int idx = findStudentByStudentID(students, *numOfStudent, id);
     if (idx >= 0) {
+        for ( int i = idx; i < *numOfStudent - 1; i++ ) {
+            (*(students + i)) = (*(students + i + 1));
+        }
         --(*numOfStudent);
-        /* TODO */
     }
 }
 
 float getMidtermAverage(StudentStruct* students, int numOfStudent) {
-    /* TODO */
+    float meanMidterm = 0.0f;
+    float sumMidterm = 0.0f;
+
+    if ( numOfStudent > 0) { // 학생이 있다면 
+
+        for ( int i = 0; i < numOfStudent; i++ ) {
+        sumMidterm += (*(students + i)).record.midterm;
+        }
+
+        meanMidterm = sumMidterm / numOfStudent;
+
+        return meanMidterm;
+    }
+    
     return 0.0f;
 }
 
 float getFinalAverage(StudentStruct* students, int numOfStudent) {
     /* TODO */
+    float meanFinal = 0.0f;
+    float sumFinal = 0.0f;
+
+    if ( numOfStudent > 0) { // 학생이 있다면 
+
+        for ( int i = 0; i < numOfStudent; i++ ) {
+        sumFinal += (*(students + i)).record.final;
+        }
+
+        meanFinal = sumFinal / numOfStudent;
+
+        return meanFinal;
+    }
+    
     return 0.0f;
 }
 
 float getTotalAverage(StudentStruct* students, int numOfStudent) {
-    /* TODO */
+    float meanMidterm = 0.0f;
+    float meanFinal = 0.0f;
+    float meanTotal = 0.0f;
+
+    float sumMidterm = 0.0f;
+    float sumFinal = 0.0f;
+    float sumTotal = 0.0f;
+
+    if ( numOfStudent > 0) { // 학생이 있다면 
+
+        for ( int i = 0; i < numOfStudent; i++ ) {   // 중간 + 기말 해서 나누기 2 하고 다시 그걸 더해서 평균 내면 평균에 평균을 내는 거임.
+             //그냥 ( 점수의 총합 ) / ( 점수의 개수 )로 평균을 구하자.
+
+            sumMidterm += (*(students + i)).record.midterm; 
+            sumFinal += (*(students + i)).record.final;
+        }
+
+        meanMidterm = sumMidterm / numOfStudent;
+        meanFinal = sumFinal / numOfStudent;
+
+        meanTotal = (meanMidterm + meanFinal) / 2.0f;
+
+        return meanTotal;
+    }
+    
     return 0.0f;
 }
 
